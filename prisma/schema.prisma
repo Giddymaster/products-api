@@ -16,4 +16,6 @@ model Product {
   isOnOffer        Boolean  @default(false)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+
+  @@Map(products_table)
 }
