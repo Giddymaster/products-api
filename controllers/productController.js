@@ -10,7 +10,6 @@ export const getAllProducts = async (req, res) => {
             data: products,
         });
     } catch (error) {
-        console.error(error);  
         res.status(500).json({
             status: "error",
             message: "Failed to fetch products",
@@ -38,7 +37,6 @@ export const getProductById = async (req, res) => {
             data: product,
         });
     } catch (error) {
-        console.error(error);  
         res.status(500).json({
             status: "error",
             message: "Failed to fetch product",
@@ -72,7 +70,6 @@ export const createProduct = async (req, res) => {
             data: product,
         });
     } catch (error) {
-        console.error(error); 
         res.status(500).json({
             status: "error",
             message: "Failed to create product",
@@ -80,59 +77,48 @@ export const createProduct = async (req, res) => {
     }
 };
 
-// export const updateProduct = async (req, res) => {
-//     const { productId } = req.params;
-//     const { productTitle, productDescription, unitsLeft, pricePerUnit, isOnOffer } = req.body;
+export const updateProduct = async (req, res) => {
+    const { productId } = req.params;
+    try {
+        const updatedProduct = await client.product.update({
+            where: { id: productId },
+            data: {
+                productTitle,
+                productDescription,
+                unitsLeft,
+                pricePerUnit,
+                isOnOffer,
+            },
+        });
 
-//     if (!productTitle || !productDescription || unitsLeft < 0 || pricePerUnit < 0) {
-//         return res.status(400).json({
-//             status: "error",
-//             message: "Invalid input data. Please check the fields.",
-//         });
-//     }
+        res.json({
+            status: "success",
+            data: updatedProduct,
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: "error",
+            message: "Failed to update product",
+        });
+    }
+};
 
-//     try {
-//         const updatedProduct = await client.product.update({
-//             where: { id: productId },
-//             data: {
-//                 productTitle,
-//                 productDescription,
-//                 unitsLeft,
-//                 pricePerUnit,
-//                 isOnOffer,
-//             },
-//         });
+export const deleteProduct = async (req, res) => {
+    const { productId } = req.params;
 
-//         res.json({
-//             status: "success",
-//             data: updatedProduct,
-//         });
-//     } catch (error) {
-//         console.error(error); 
-//         res.status(500).json({
-//             status: "error",
-//             message: "Failed to update product",
-//         });
-//     }
-// };
+    try {
+        await client.product.delete({
+            where: { id: productId },
+        });
 
-// export const deleteProduct = async (req, res) => {
-//     const { productId } = req.params;
-
-//     try {
-//         await client.product.delete({
-//             where: { id: productId },
-//         });
-
-//         res.status(204).send();  
-//     } catch (error) {
-//         console.error(error); 
-//         res.status(500).json({
-//             status: "error",
-//             message: "Failed to delete product",
-//         });
-//     }
-// };
+        res.status(204).send();  
+    } catch (error) {
+        res.status(500).json({
+            status: "error",
+            message: "Failed to delete product",
+        });
+    }
+};
 
 export const getProductsOnOffer = async (req, res) => {
     try {
@@ -145,7 +131,6 @@ export const getProductsOnOffer = async (req, res) => {
             data: products,
         });
     } catch (error) {
-        console.error(error);
         res.status(500).json({
             status: "error",
             message: "Failed to fetch products on offer",

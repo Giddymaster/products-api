@@ -1,5 +1,5 @@
 export function validateProduct(req, res, next) {
-    const { productTitle, productDescription, unitsLeft } = req.body;
+    const { productTitle, productDescription, unitsLeft, pricePerUnit } = req.body;
 
     if (!productTitle ) {
         return res.status(400).json({
@@ -21,5 +21,13 @@ export function validateProduct(req, res, next) {
             message: "Sold out! No more Units left "
         });
     }
+
+    if (!pricePerUnit) {
+        return res.status(400).json({
+            status: "error",
+            message: "Adjust Price "
+        });
+    }
+
     next();
 }
